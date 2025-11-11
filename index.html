@@ -16,6 +16,29 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .floating-food {
+            position: absolute;
+            font-size: 24px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
         }
 
         .container {
@@ -27,24 +50,62 @@
             text-align: center;
             color: white;
             margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out;
         }
         
         .header h1 {
-            font-size: 2.5em;
+            font-size: 2.8em;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 0.6s ease-out;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
         
         .input-section {
             display: grid;
-            gap: 15px;
+            gap: 20px;
         }
         
         .input-group {
@@ -54,66 +115,96 @@
         
         label {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #333;
+            font-size: 1.1em;
         }
         
         input, select {
-            padding: 12px;
+            padding: 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
-            transition: border 0.3s;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.8);
         }
         
         input:focus, select:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
         }
         
         .quick-add {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        
-        .quick-btn {
-            padding: 8px 15px;
-            background: #f0f0f0;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        
-        .quick-btn:hover {
-            background: #667eea;
-            color: white;
-        }
-        
-        .btn {
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            width: 100%;
             margin-top: 15px;
         }
         
+        .quick-btn {
+            padding: 10px 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .quick-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn {
+            padding: 18px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
         .btn:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
         }
         
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
         }
         
         .results {
@@ -122,263 +213,188 @@
         
         .results.show {
             display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
         }
         
         .stat-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
         
         .stat-value {
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Animated Delete Button from Uiverse.io */
-.button-delete {
-  position: relative;
-  width: 150px;
-  height: 50px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  border: 1px solid #cc0000;
-  background-color: #e50000;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.button-delete, .button-delete__icon, .button-delete__text {
-  transition: all 0.3s;
-}
-
-.button-delete .button-delete__text {
-  transform: translateX(22px);
-  color: #fff;
-  font-weight: 600;
-  font-size: 16px;
-}
-
-.button-delete .button-delete__icon {
-  position: absolute;
-  transform: translateX(109px);
-  height: 100%;
-  width: 39px;
-  background-color: #cc0000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.button-delete .svg {
-  width: 20px;
-  fill: none;
-}
-
-.button-delete:hover {
-  background: #cc0000;
-}
-
-.button-delete:hover .button-delete__text {
-  color: transparent;
-}
-
-.button-delete:hover .button-delete__icon {
-  width: 148px;
-  transform: translateX(0);
-}
-
-.button-delete:active .button-delete__icon {
-  background-color: #b20000;
-}
-
-.button-delete:active {
-  border: 1px solid #b20000;
-}
-
-        
         .stat-label {
-            font-size: 0.9em;
+            font-size: 1em;
             opacity: 0.9;
+            font-weight: 500;
         }
         
         .macro-breakdown {
-            margin: 20px 0;
+            margin: 25px 0;
+        }
+
+        .macro-breakdown h3 {
+            margin-bottom: 15px;
+            color: #333;
         }
         
         .macro-bar {
             display: flex;
-            height: 40px;
-            border-radius: 10px;
+            height: 50px;
+            border-radius: 12px;
             overflow: hidden;
-            margin: 10px 0;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-
-<button class="button" type="button">
-  <span class="button__text">Delete</span>
-  <span class="button__icon"><svg class="svg" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><title></title><path d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path><line style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" x1="80" x2="432" y1="112" y2="112"></line><path d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path><line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="256" x2="256" y1="176" y2="400"></line><line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="184" x2="192" y1="176" y2="400"></line><line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="328" x2="320" y1="176" y2="400"></line></svg></span>
-</button>
         
         .protein-bar {
-            background: #ff6b6b;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .protein-bar:hover {
+            filter: brightness(1.1);
         }
         
         .carbs-bar {
-            background: #4ecdc4;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .carbs-bar:hover {
+            filter: brightness(1.1);
         }
         
         .fat-bar {
-            background: #ffe66d;
+            background: linear-gradient(135deg, #ffe66d 0%, #fdc830 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             color: #333;
             font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .fat-bar:hover {
+            filter: brightness(1.1);
         }
         
         .food-items {
-            margin-top: 20px;
+            margin-top: 25px;
         }
         
         .food-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            background: rgba(248, 249, 250, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .food-item:hover {
+            transform: translateX(5px);
+            background: rgba(248, 249, 250, 1);
         }
         
         .food-item h4 {
             color: #667eea;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 1.2em;
         }
         
         .food-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
             font-size: 14px;
         }
         
         .history-section {
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .history-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .history-section::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        .history-section::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
         }
         
         .meal-entry {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
+            background: rgba(248, 249, 250, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
         }
 
-        /* Animated Export Button from Uiverse.io */
-.button-export {
-  position: relative;
-  overflow: hidden;
-  height: 3rem;
-  padding: 0 2rem;
-  border-radius: 1.5rem;
-  background: #3d3a4e;
-  background-size: 400%;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.button-export:hover::before {
-  transform: scaleX(1);
-}
-
-.button-export:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(150, 93, 233, 0.4);
-}
-
-.button-content {
-  position: relative;
-  z-index: 1;
-}
-
-.button-export::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  width: 100%;
-  height: inherit;
-  border-radius: inherit;
-  background: linear-gradient(
-    82.3deg,
-    rgba(150, 93, 233, 1) 10.8%,
-    rgba(99, 88, 238, 1) 94.3%
-  );
-  transition: all 0.475s;
-}
-
-/* Clear All Button styling */
-.button-clear {
-  position: relative;
-  overflow: hidden;
-  height: 3rem;
-  padding: 0 2rem;
-  border-radius: 1.5rem;
-  background: #dc3545;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.button-clear:hover {
-  background: #c82333;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
-}
-
+        .meal-entry:hover {
+            transform: translateX(5px);
+            background: rgba(248, 249, 250, 1);
+        }
         
         .meal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
         
         .meal-type {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 6px 18px;
+            border-radius: 25px;
             font-size: 14px;
+            font-weight: 600;
         }
         
         .timestamp {
@@ -387,12 +403,19 @@
         }
         
         .error {
-            background: #ff6b6b;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
             color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 18px;
             display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         
         .error.show {
@@ -402,7 +425,7 @@
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
         }
         
         .loading.show {
@@ -413,10 +436,10 @@
             border: 4px solid #f3f3f3;
             border-top: 4px solid #667eea;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 20px;
         }
         
         @keyframes spin {
@@ -424,40 +447,220 @@
             100% { transform: rotate(360deg); }
         }
         
-        .btn-secondary {
-            background: #6c757d;
-            margin-top: 10px;
-        }
-        
         .daily-stats {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
         
         .daily-stats h3 {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.4em;
         }
         
         .daily-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
         }
         
         .daily-item {
             text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .daily-item:hover {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.3);
         }
         
         .daily-value {
-            font-size: 1.5em;
+            font-size: 1.8em;
             font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Button styles remain exactly the same */
+        .button-delete {
+            position: relative;
+            width: 150px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border: 1px solid #cc0000;
+            background-color: #e50000;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .button-delete, .button-delete__icon, .button-delete__text {
+            transition: all 0.3s;
+        }
+
+        .button-delete .button-delete__text {
+            transform: translateX(22px);
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .button-delete .button-delete__icon {
+            position: absolute;
+            transform: translateX(109px);
+            height: 100%;
+            width: 39px;
+            background-color: #cc0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button-delete .svg {
+            width: 20px;
+            fill: none;
+        }
+
+        .button-delete:hover {
+            background: #cc0000;
+        }
+
+        .button-delete:hover .button-delete__text {
+            color: transparent;
+        }
+
+        .button-delete:hover .button-delete__icon {
+            width: 148px;
+            transform: translateX(0);
+        }
+
+        .button-delete:active .button-delete__icon {
+            background-color: #b20000;
+        }
+
+        .button-delete:active {
+            border: 1px solid #b20000;
+        }
+
+        .button-export {
+            position: relative;
+            overflow: hidden;
+            height: 3rem;
+            padding: 0 2rem;
+            border-radius: 1.5rem;
+            background: #3d3a4e;
+            background-size: 400%;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .button-export:hover::before {
+            transform: scaleX(1);
+        }
+
+        .button-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(150, 93, 233, 0.4);
+        }
+
+        .button-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .button-export::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: scaleX(0);
+            transform-origin: 0 50%;
+            width: 100%;
+            height: inherit;
+            border-radius: inherit;
+            background: linear-gradient(
+                82.3deg,
+                rgba(150, 93, 233, 1) 10.8%,
+                rgba(99, 88, 238, 1) 94.3%
+            );
+            transition: all 0.475s;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .quick-add {
+                justify-content: center;
+            }
+            
+            .meal-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+        }
+
+        /* Progress animation for macro bars */
+        .macro-bar > div {
+            animation: growBar 1s ease-out forwards;
+            transform-origin: left;
+        }
+
+        @keyframes growBar {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
+
+        /* Success animation */
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: success 0.5s ease-in-out;
         }
     </style>
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="background-animation" id="backgroundAnimation"></div>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -569,39 +772,54 @@
 
         <!-- History Card -->
         <div class="card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <!-- In Meal History Card -->
-<div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
-        <h2>📜 Meal History</h2>
-        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-            <!-- Export Button (Purple Gradient) -->
-            <button class="button-export" onclick="exportData()">
-                <span class="button-content">💾 Export CSV</span>
-            </button>
-            
-            <!-- Clear All Button (Red Animated) -->
-            <button class="button-delete" type="button" onclick="clearHistory()">
-                <span class="button-delete__text">Clear All</span>
-                <span class="button-delete__icon">
-                    <svg class="svg" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path>
-                        <line style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" x1="80" x2="432" y1="112" y2="112"></line>
-                        <path d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path>
-                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="256" x2="256" y1="176" y2="400"></line>
-                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="184" x2="192" y1="176" y2="400"></line>
-                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="328" x2="320" y1="176" y2="400"></line>
-                    </svg>
-                </span>
-            </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <h2>📜 Meal History</h2>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <!-- Export Button (Purple Gradient) -->
+                    <button class="button-export" onclick="exportData()">
+                        <span class="button-content">💾 Export CSV</span>
+                    </button>
+                    
+                    <!-- Clear All Button (Red Animated) -->
+                    <button class="button-delete" type="button" onclick="clearHistory()">
+                        <span class="button-delete__text">Clear All</span>
+                        <span class="button-delete__icon">
+                            <svg class="svg" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path>
+                                <line style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" x1="80" x2="432" y1="112" y2="112"></line>
+                                <path d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path>
+                                <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="256" x2="256" y1="176" y2="400"></line>
+                                <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="184" x2="192" y1="176" y2="400"></line>
+                                <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="328" x2="320" y1="176" y2="400"></line>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="history-section" id="history">
+                <p style="text-align: center; color: #999;">No meals logged yet. Add your first meal above!</p>
+            </div>
         </div>
     </div>
-    <div class="history-section" id="history">
-        <p style="text-align: center; color: #999;">No meals logged yet. Add your first meal above!</p>
-    </div>
-</div>
 
     <script>
+        // Create animated background
+        function createAnimatedBackground() {
+            const background = document.getElementById('backgroundAnimation');
+            const foodIcons = ['🍎', '🍗', '🥑', '🍚', '🥚', '🧈', '🥣', '🫓', '🥦', '🥛'];
+            
+            for (let i = 0; i < 15; i++) {
+                const food = document.createElement('div');
+                food.className = 'floating-food';
+                food.textContent = foodIcons[Math.floor(Math.random() * foodIcons.length)];
+                food.style.left = Math.random() * 100 + '%';
+                food.style.top = Math.random() * 100 + '%';
+                food.style.animationDelay = Math.random() * 6 + 's';
+                food.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                background.appendChild(food);
+            }
+        }
+
         // Quick add food function
         function addQuickFood(food) {
             const input = document.getElementById('foodInput');
@@ -610,6 +828,8 @@
             } else {
                 input.value = food;
             }
+            // Add focus back to input
+            input.focus();
         }
 
         // Analyze meal function
@@ -652,6 +872,10 @@
                     updateDailyStats(data.daily_stats);
                     loadHistory();
                     document.getElementById('foodInput').value = '';
+                    
+                    // Add success animation
+                    results.classList.add('success-animation');
+                    setTimeout(() => results.classList.remove('success-animation'), 500);
                 } else {
                     showError(data.error);
                 }
@@ -775,13 +999,13 @@
 
         // Export data
         async function exportData() {
-    try {
-        // Direct download link
-        window.location.href = '/api/export';
-    } catch (err) {
-        showError('Error exporting data');
-    }
-}
+            try {
+                // Direct download link
+                window.location.href = '/api/export';
+            } catch (err) {
+                showError('Error exporting data');
+            }
+        }
 
         // Show error
         function showError(message) {
@@ -791,8 +1015,9 @@
             setTimeout(() => error.classList.remove('show'), 5000);
         }
 
-        // Load history on page load
+        // Initialize on page load
         window.onload = () => {
+            createAnimatedBackground();
             loadHistory();
         };
 
@@ -801,6 +1026,19 @@
             if (e.key === 'Enter') {
                 analyzeMeal();
             }
+        });
+
+        // Add hover effects to cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
         });
     </script>
 </body>
