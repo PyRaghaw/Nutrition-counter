@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍽️ Meal Nutrition Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .input-section {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        input, select {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .quick-add {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        
+        .quick-btn {
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .quick-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .macro-breakdown {
+            margin: 20px 0;
+        }
+        
+        .macro-bar {
+            display: flex;
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .protein-bar {
+            background: #ff6b6b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .carbs-bar {
+            background: #4ecdc4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .fat-bar {
+            background: #ffe66d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .food-items {
+            margin-top: 20px;
+        }
+        
+        .food-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .food-item h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .food-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .history-section {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .meal-entry {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .meal-type {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .timestamp {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .error.show {
+            display: block;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            margin-top: 10px;
+        }
+        
+        .daily-stats {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .daily-stats h3 {
+            margin-bottom: 15px;
+        }
+        
+        .daily-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .daily-item {
+            text-align: center;
+        }
+        
+        .daily-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🍽️ Meal Nutrition Calculator</h1>
+            <p>Track your meals and analyze nutrition with AI-powered insights</p>
+        </div>
+
+        <!-- Input Card -->
+        <div class="card">
+            <h2>➕ Add Meal</h2>
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="foodInput">Enter Food Items</label>
+                    <input 
+                        type="text" 
+                        id="foodInput" 
+                        placeholder="e.g., 2 roti, 100g chicken, 1 cup daal"
+                    >
+                    <div class="quick-add">
+                        <button class="quick-btn" onclick="addQuickFood('2 roti')">🫓 2 Roti</button>
+                        <button class="quick-btn" onclick="addQuickFood('1 cup rice')">🍚 Rice</button>
+                        <button class="quick-btn" onclick="addQuickFood('100g chicken')">🍗 Chicken</button>
+                        <button class="quick-btn" onclick="addQuickFood('1 cup daal')">🥣 Daal</button>
+                        <button class="quick-btn" onclick="addQuickFood('2 eggs')">🥚 2 Eggs</button>
+                        <button class="quick-btn" onclick="addQuickFood('100g paneer')">🧈 Paneer</button>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="mealType">Meal Type</label>
+                    <select id="mealType">
+                        <option value="Breakfast">🌅 Breakfast</option>
+                        <option value="Lunch">☀️ Lunch</option>
+                        <option value="Dinner">🌙 Dinner</option>
+                        <option value="Snack">🍎 Snack</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="analyzeMeal()" id="analyzeBtn">
+                📊 Analyze Meal
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing your meal...</p>
+            </div>
+            
+            <div class="error" id="error"></div>
+        </div>
+
+        <!-- Daily Stats -->
+        <div class="daily-stats" id="dailyStats" style="display: none;">
+            <h3>📈 Today's Summary</h3>
+            <div class="daily-grid">
+                <div class="daily-item">
+                    <div class="daily-value" id="dailyCalories">0</div>
+                    <div>Total Calories</div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-value" id="dailyProtein">0g</div>
+                    <div>Total Protein</div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-value" id="dailyMeals">0</div>
+                    <div>Meals Logged</div>
+                </div>
+                <div class="daily-item">
+                    <div class="daily-value" id="avgCalories">0</div>
+                    <div>Avg per Meal</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Card -->
+        <div class="card results" id="results">
+            <h2>📊 Nutrition Analysis</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">🔥 Calories</div>
+                    <div class="stat-value" id="totalCalories">0</div>
+                    <div class="stat-label">kcal</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">💪 Protein</div>
+                    <div class="stat-value" id="totalProtein">0</div>
+                    <div class="stat-label">grams</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">🌾 Carbs</div>
+                    <div class="stat-value" id="totalCarbs">0</div>
+                    <div class="stat-label">grams</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">🥑 Fats</div>
+                    <div class="stat-value" id="totalFat">0</div>
+                    <div class="stat-label">grams</div>
+                </div>
+            </div>
+            
+            <div class="macro-breakdown">
+                <h3>Macro Breakdown</h3>
+                <div class="macro-bar" id="macroBar"></div>
+            </div>
+            
+            <div class="food-items" id="foodItems"></div>
+        </div>
+
+        <!-- History Card -->
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>📜 Meal History</h2>
+                <div>
+                    <button class="btn btn-secondary" onclick="exportData()" style="width: auto; padding: 10px 20px; margin: 0 5px;">
+                        💾 Export
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearHistory()" style="width: auto; padding: 10px 20px; margin: 0;">
+                        🗑️ Clear All
+                    </button>
+                </div>
+            </div>
+            <div class="history-section" id="history">
+                <p style="text-align: center; color: #999;">No meals logged yet. Add your first meal above!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quick add food function
+        function addQuickFood(food) {
+            const input = document.getElementById('foodInput');
+            if (input.value.trim()) {
+                input.value += ', ' + food;
+            } else {
+                input.value = food;
+            }
+        }
+
+        // Analyze meal function
+        async function analyzeMeal() {
+            const foodInput = document.getElementById('foodInput').value.trim();
+            const mealType = document.getElementById('mealType').value;
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const results = document.getElementById('results');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            
+            // Validation
+            if (!foodInput) {
+                showError('Please enter food items');
+                return;
+            }
+            
+            // Show loading
+            loading.classList.add('show');
+            error.classList.remove('show');
+            results.classList.remove('show');
+            analyzeBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        food_query: foodInput,
+                        meal_type: mealType
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.meal);
+                    updateDailyStats(data.daily_stats);
+                    loadHistory();
+                    document.getElementById('foodInput').value = '';
+                } else {
+                    showError(data.error);
+                }
+            } catch (err) {
+                showError('Network error. Please check your connection.');
+            } finally {
+                loading.classList.remove('show');
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        // Display results
+        function displayResults(meal) {
+            const results = document.getElementById('results');
+            const totals = meal.totals;
+            
+            document.getElementById('totalCalories').textContent = totals.total_calories;
+            document.getElementById('totalProtein').textContent = totals.total_protein;
+            document.getElementById('totalCarbs').textContent = totals.total_carbs;
+            document.getElementById('totalFat').textContent = totals.total_fat;
+            
+            // Macro bar
+            const macroBar = document.getElementById('macroBar');
+            macroBar.innerHTML = `
+                <div class="protein-bar" style="width: ${totals.protein_percent}%">
+                    Protein ${totals.protein_percent}%
+                </div>
+                <div class="carbs-bar" style="width: ${totals.carbs_percent}%">
+                    Carbs ${totals.carbs_percent}%
+                </div>
+                <div class="fat-bar" style="width: ${totals.fat_percent}%">
+                    Fat ${totals.fat_percent}%
+                </div>
+            `;
+            
+            // Food items
+            const foodItems = document.getElementById('foodItems');
+            foodItems.innerHTML = '<h3>Food Items</h3>';
+            totals.items.forEach(item => {
+                foodItems.innerHTML += `
+                    <div class="food-item">
+                        <h4>${item.name}</h4>
+                        <div class="food-details">
+                            <div><strong>Calories:</strong> ${item.calories}</div>
+                            <div><strong>Protein:</strong> ${item.protein_g}g</div>
+                            <div><strong>Carbs:</strong> ${item.carbohydrates_total_g}g</div>
+                            <div><strong>Fat:</strong> ${item.fat_total_g}g</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            results.classList.add('show');
+        }
+
+        // Update daily stats
+        function updateDailyStats(stats) {
+            if (!stats) return;
+            
+            document.getElementById('dailyStats').style.display = 'block';
+            document.getElementById('dailyCalories').textContent = Math.round(stats.total_calories_today);
+            document.getElementById('dailyProtein').textContent = Math.round(stats.total_protein_today) + 'g';
+            document.getElementById('dailyMeals').textContent = stats.total_meals;
+            document.getElementById('avgCalories').textContent = Math.round(stats.avg_calories_per_meal);
+        }
+
+        // Load history
+        async function loadHistory() {
+            try {
+                const response = await fetch('/api/history');
+                const data = await response.json();
+                
+                if (data.success && data.history.length > 0) {
+                    const historyDiv = document.getElementById('history');
+                    historyDiv.innerHTML = '';
+                    
+                    data.history.reverse().forEach(meal => {
+                        historyDiv.innerHTML += `
+                            <div class="meal-entry">
+                                <div class="meal-header">
+                                    <span class="meal-type">${meal.meal_type}</span>
+                                    <span class="timestamp">${meal.timestamp}</span>
+                                </div>
+                                <div><strong>Food:</strong> ${meal.food_query}</div>
+                                <div style="margin-top: 10px;">
+                                    <strong>Totals:</strong> 
+                                    ${meal.totals.total_calories} cal | 
+                                    ${meal.totals.total_protein}g protein | 
+                                    ${meal.totals.total_carbs}g carbs | 
+                                    ${meal.totals.total_fat}g fat
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    updateDailyStats(data.daily_stats);
+                }
+            } catch (err) {
+                console.error('Error loading history:', err);
+            }
+        }
+
+        // Clear history
+        async function clearHistory() {
+            if (!confirm('Are you sure you want to clear all meal history?')) return;
+            
+            try {
+                const response = await fetch('/api/clear', {method: 'POST'});
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('history').innerHTML = 
+                        '<p style="text-align: center; color: #999;">No meals logged yet. Add your first meal above!</p>';
+                    document.getElementById('dailyStats').style.display = 'none';
+                    document.getElementById('results').classList.remove('show');
+                }
+            } catch (err) {
+                showError('Error clearing history');
+            }
+        }
+
+        // Export data
+        async function exportData() {
+    try {
+        // Direct download link
+        window.location.href = '/api/export';
+    } catch (err) {
+        showError('Error exporting data');
+    }
+}
+
+        // Show error
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = '❌ ' + message;
+            error.classList.add('show');
+            setTimeout(() => error.classList.remove('show'), 5000);
+        }
+
+        // Load history on page load
+        window.onload = () => {
+            loadHistory();
+        };
+
+        // Enter key support
+        document.getElementById('foodInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                analyzeMeal();
+            }
+        });
+    </script>
+</body>
+</html>
