@@ -17,7 +17,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -144,6 +144,69 @@
             font-weight: bold;
             margin: 10px 0;
         }
+
+        /* Animated Delete Button from Uiverse.io */
+.button-delete {
+  position: relative;
+  width: 150px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid #cc0000;
+  background-color: #e50000;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.button-delete, .button-delete__icon, .button-delete__text {
+  transition: all 0.3s;
+}
+
+.button-delete .button-delete__text {
+  transform: translateX(22px);
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.button-delete .button-delete__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: #cc0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-delete .svg {
+  width: 20px;
+  fill: none;
+}
+
+.button-delete:hover {
+  background: #cc0000;
+}
+
+.button-delete:hover .button-delete__text {
+  color: transparent;
+}
+
+.button-delete:hover .button-delete__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button-delete:active .button-delete__icon {
+  background-color: #b20000;
+}
+
+.button-delete:active {
+  border: 1px solid #b20000;
+}
+
         
         .stat-label {
             font-size: 0.9em;
@@ -507,22 +570,36 @@
         <!-- History Card -->
         <div class="card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2>📜 Meal History</h2>
-    <div style="display: flex; gap: 10px;">
-        <button class="button-export" onclick="exportData()">
-            <span class="button-content">💾 Export CSV</span>
-        </button>
-        <button class="button-clear" onclick="clearHistory()">
-            <span class="button-content">🗑️ Clear All</span>
-        </button>
-    </div>
-</div>
-
-            <div class="history-section" id="history">
-                <p style="text-align: center; color: #999;">No meals logged yet. Add your first meal above!</p>
-            </div>
+    <!-- In Meal History Card -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+        <h2>📜 Meal History</h2>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <!-- Export Button (Purple Gradient) -->
+            <button class="button-export" onclick="exportData()">
+                <span class="button-content">💾 Export CSV</span>
+            </button>
+            
+            <!-- Clear All Button (Red Animated) -->
+            <button class="button-delete" type="button" onclick="clearHistory()">
+                <span class="button-delete__text">Clear All</span>
+                <span class="button-delete__icon">
+                    <svg class="svg" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path>
+                        <line style="stroke:#fff;stroke-linecap:round;stroke-miterlimit:10;stroke-width:32px" x1="80" x2="432" y1="112" y2="112"></line>
+                        <path d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40" style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px"></path>
+                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="256" x2="256" y1="176" y2="400"></line>
+                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="184" x2="192" y1="176" y2="400"></line>
+                        <line style="fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:32px" x1="328" x2="320" y1="176" y2="400"></line>
+                    </svg>
+                </span>
+            </button>
         </div>
     </div>
+    <div class="history-section" id="history">
+        <p style="text-align: center; color: #999;">No meals logged yet. Add your first meal above!</p>
+    </div>
+</div>
 
     <script>
         // Quick add food function
