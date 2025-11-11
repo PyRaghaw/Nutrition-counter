@@ -304,4 +304,46 @@ def export_data():
                 meal['totals']['carbs_percent'],
                 meal['totals']['fat_percent']
             ])
+
+# Add summary row
+        if meal_history:
+            daily_stats = calculate_daily_stats()
+            writer.writerow([])  # Empty row
+            writer.writerow(['DAILY SUMMARY', '', '', '', '', '', '', '', '', ''])
+            writer.writerow([
+                'Total Meals', 
+                daily_stats['total_meals'],
+                '',
+                daily_stats['total_calories_today'],
+                daily_stats['total_protein_today'],
+                '',
+                '',
+                '',
+                '',
+                ''
+            ])
         
+        # Get CSV string
+        csv_string = output.getvalue()
+        output.close()
+        
+        # Return as downloadable file
+        from flask import make_response
+        response = make_response(csv_string)
+        response.headers['Content-Type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=nutrition-log-{datetime.now().strftime("%Y%m%d-%H%M%S")}.csv'
+        
+        return response
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+
+@app.route('/api/foods', methods=['GET'])
+def get_food_list():
+    """Get list of available foods"""
+    foods = [{'key': k, 'name': v['name'], 'serving': v['serving']} for k, v in FOOD_DATABASE.items()]
+    return jsonify({'success': True, 'foods': foods})
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
