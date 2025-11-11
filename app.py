@@ -187,3 +187,121 @@ def calculate_nutrition_totals(nutrition_data):
         'fat_percent': round(fat_percent, 1),
         'items': nutrition_data
     }
+
+def calculate_daily_stats():
+    """Calculate daily statistics"""
+    if not meal_history:
+        return None
+    
+    all_calories = np.array([float(meal['totals']['total_calories']) for meal in meal_history], dtype=np.float64)
+    all_protein = np.array([float(meal['totals']['total_protein']) for meal in meal_history], dtype=np.float64)
+    
+    return {
+        'total_meals': len(meal_history),
+        'total_calories_today': float(np.sum(all_calories)),
+        'total_protein_today': float(np.sum(all_protein)),
+        'avg_calories_per_meal': float(np.mean(all_calories)),
+        'max_calories_meal': float(np.max(all_calories))
+    }
+
+# ============ ROUTES ============
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/api/analyze', methods=['POST'])
+def analyze_food():
+    try:
+        data = request.get_json()
+        food_query = data.get('food_query', '').strip()
+        meal_type = data.get('meal_type', 'Snack')
+        
+        if not food_query:
+            return jsonify({'success': False, 'error': 'Please enter food items'})
+        
+        # Get nutrition from local database
+        result = get_nutrition_data(food_query)
+        
+        if not result['success']:
+            return jsonify(result)
+        
+        # Calculate totals
+        totals = calculate_nutrition_totals(result['data'])
+        
+        if not totals:
+            return jsonify({'success': False, 'error': 'Unable to calculate nutrition'})
+        
+        # Add to history
+        meal_entry = {
+            'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'meal_type': meal_type,
+            'food_query': food_query,
+            'totals': totals
+        }
+        meal_history.append(meal_entry)
+        
+        # Get daily stats
+        daily_stats = calculate_daily_stats()
+        
+        return jsonify({
+            'success': True,
+            'meal': meal_entry,
+            'daily_stats': daily_stats
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    daily_stats = calculate_daily_stats()
+    return jsonify({
+        'success': True,
+        'history': meal_history,
+        'daily_stats': daily_stats
+    })
+
+@app.route('/api/clear', methods=['POST'])
+def clear_history():
+    global meal_history
+    meal_history = []
+    return jsonify({'success': True, 'message': 'History cleared'})
+
+@app.route('/api/export', methods=['GET'])
+@app.route('/api/export', methods=['GET'])
+def export_data():
+    """Export meal history as CSV"""
+    try:
+        # Create CSV in memory
+        output = StringIO()
+        writer = csv.writer(output)
+        
+        # Write headers
+        writer.writerow([
+            'Timestamp', 
+            'Meal Type', 
+            'Food Items', 
+            'Total Calories (kcal)', 
+            'Protein (g)', 
+            'Carbs (g)', 
+            'Fat (g)',
+            'Protein %',
+            'Carbs %',
+            'Fat %'
+        ])
+        
+        # Write data rows
+        for meal in meal_history:
+            writer.writerow([
+                meal['timestamp'],
+                meal['meal_type'],
+                meal['food_query'],
+                meal['totals']['total_calories'],
+                meal['totals']['total_protein'],
+                meal['totals']['total_carbs'],
+                meal['totals']['total_fat'],
+                meal['totals']['protein_percent'],
+                meal['totals']['carbs_percent'],
+                meal['totals']['fat_percent']
+            ])
+        
