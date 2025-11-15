@@ -6,8 +6,7 @@ from io import StringIO
 
 app = Flask(__name__)
 
-# ============ INDIAN FOOD NUTRITION DATABASE ============
-# All values per 100g or per item (as specified)
+
 FOOD_DATABASE = {
     # Roti & Bread
     'roti': {'name': 'Roti (1 medium)', 'serving': '1 piece', 'calories': 120, 'protein_g': 3, 'carbs_g': 18, 'fat_g': 3.7},
@@ -66,7 +65,6 @@ FOOD_DATABASE = {
 # Session storage
 meal_history = []
 
-# ============ FOOD PARSER ============
 def parse_food_query(query):
     """
     Parse natural language food query
@@ -78,17 +76,14 @@ def parse_food_query(query):
     
     parsed_items = []
     for item in items:
-        # Extract quantity (number at start)
         words = item.split()
         quantity = 1  # default
         food_name = item
         
-        # Check if first word is a number
         if words and words[0].replace('.', '').isdigit():
             quantity = float(words[0])
             food_name = ' '.join(words[1:])
         
-        # Remove units like 'g', 'grams', 'cup', 'piece'
         food_name = food_name.replace('g', '').replace('grams', '').replace('cup', '').replace('piece', '').replace('pieces', '').strip()
         
         parsed_items.append({
@@ -112,11 +107,10 @@ def get_nutrition_data(food_query):
             food_name = item['food']
             quantity = item['quantity']
             
-            # Search in database (fuzzy matching)
             found = False
             for key, data in FOOD_DATABASE.items():
                 if key in food_name or food_name in key:
-                    # Calculate nutrition based on quantity
+
                     nutrition = {
                         'name': f"{quantity} x {data['name']}",
                         'calories': data['calories'] * quantity,
@@ -129,7 +123,6 @@ def get_nutrition_data(food_query):
                     break
             
             if not found:
-                # Food not in database - show warning
                 nutrition_data.append({
                     'name': f"{quantity} x {food_name} (Not in database)",
                     'calories': 0,
@@ -146,7 +139,6 @@ def get_nutrition_data(food_query):
     except Exception as e:
         return {'success': False, 'error': str(e)}
 
-# ============ NUMPY CALCULATIONS ============
 def calculate_nutrition_totals(nutrition_data):
     """Calculate totals using NumPy"""
     if not nutrition_data:
@@ -204,7 +196,6 @@ def calculate_daily_stats():
         'max_calories_meal': float(np.max(all_calories))
     }
 
-# ============ ROUTES ============
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -225,13 +216,11 @@ def analyze_food():
         if not result['success']:
             return jsonify(result)
         
-        # Calculate totals
         totals = calculate_nutrition_totals(result['data'])
         
         if not totals:
             return jsonify({'success': False, 'error': 'Unable to calculate nutrition'})
         
-        # Add to history
         meal_entry = {
             'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'meal_type': meal_type,
@@ -240,7 +229,6 @@ def analyze_food():
         }
         meal_history.append(meal_entry)
         
-        # Get daily stats
         daily_stats = calculate_daily_stats()
         
         return jsonify({
@@ -276,7 +264,6 @@ def export_data():
         output = StringIO()
         writer = csv.writer(output)
         
-        # Write headers
         writer.writerow([
             'Timestamp', 
             'Meal Type', 
@@ -290,7 +277,6 @@ def export_data():
             'Fat %'
         ])
         
-        # Write data rows
         for meal in meal_history:
             writer.writerow([
                 meal['timestamp'],
@@ -305,7 +291,6 @@ def export_data():
                 meal['totals']['fat_percent']
             ])
 
-# Add summary row
         if meal_history:
             daily_stats = calculate_daily_stats()
             writer.writerow([])  # Empty row
@@ -323,11 +308,9 @@ def export_data():
                 ''
             ])
         
-        # Get CSV string
         csv_string = output.getvalue()
         output.close()
         
-        # Return as downloadable file
         from flask import make_response
         response = make_response(csv_string)
         response.headers['Content-Type'] = 'text/csv'
@@ -347,3 +330,7 @@ def get_food_list():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+
+
+#Author---->Raghaw Shukla
