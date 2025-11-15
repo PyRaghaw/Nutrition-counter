@@ -15,25 +15,23 @@ A simple web app to track your meals and calculate nutrition using **Flask** and
 - 🎨 Clean, modern UI
 - ⚡ No external APIs needed
 
-## Installation
-
-Clone repository
+# Clone the repository
 git clone https://github.com/PyRaghaw/meal-nutrition-calculator.git
 cd meal-nutrition-calculator
 
-Create virtual environment
+# Create and activate virtual environment
 python3 -m venv venv
-source venv/bin/activate # Windows: venv\Scripts\activate
+source venv/bin/activate   # For Windows: venv\Scripts\activate
 
-Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-Run app
+# Run the Flask app
 python app.py
 
-text
+# Open in browser
+http://localhost:5000
 
-Open `http://localhost:5000` in your browser.
 
 ## Usage
 
