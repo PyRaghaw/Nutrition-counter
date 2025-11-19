@@ -139,46 +139,6 @@ def get_nutrition_data(food_query):
     except Exception as e:
         return {'success': False, 'error': str(e)}
 
-def calculate_nutrition_totals(nutrition_data):
-    """Calculate totals using NumPy"""
-    if not nutrition_data:
-        return None
-    
-    def safe_float(value):
-        try:
-            return float(value) if value is not None else 0.0
-        except (ValueError, TypeError):
-            return 0.0
-    
-    calories = np.array([safe_float(item.get('calories', 0)) for item in nutrition_data], dtype=np.float64)
-    protein = np.array([safe_float(item.get('protein_g', 0)) for item in nutrition_data], dtype=np.float64)
-    carbs = np.array([safe_float(item.get('carbohydrates_total_g', 0)) for item in nutrition_data], dtype=np.float64)
-    fat = np.array([safe_float(item.get('fat_total_g', 0)) for item in nutrition_data], dtype=np.float64)
-    
-    total_calories = float(np.sum(calories))
-    total_protein = float(np.sum(protein))
-    total_carbs = float(np.sum(carbs))
-    total_fat = float(np.sum(fat))
-    
-    total_macros = total_protein * 4 + total_carbs * 4 + total_fat * 9
-    
-    if total_macros > 0:
-        protein_percent = (total_protein * 4 / total_macros) * 100
-        carbs_percent = (total_carbs * 4 / total_macros) * 100
-        fat_percent = (total_fat * 9 / total_macros) * 100
-    else:
-        protein_percent = carbs_percent = fat_percent = 0
-    
-    return {
-        'total_calories': round(total_calories, 1),
-        'total_protein': round(total_protein, 1),
-        'total_carbs': round(total_carbs, 1),
-        'total_fat': round(total_fat, 1),
-        'protein_percent': round(protein_percent, 1),
-        'carbs_percent': round(carbs_percent, 1),
-        'fat_percent': round(fat_percent, 1),
-        'items': nutrition_data
-    }
 
 def calculate_daily_stats():
     """Calculate daily statistics"""
