@@ -28,8 +28,7 @@ pip install -r requirements.txt
 
 # Run the Flask app
 python app.py
-
-# Open in browser
+Open in browser
 http://localhost:5000
 
 
@@ -52,7 +51,7 @@ MIT License - see [LICENSE](LICENSE) file.
 
 ## Author
 
-**Raghav Shukla**  
+**Raghaw Shukla**  
 GitHub: [@PyRaghaw](https://github.com/PyRaghaw)
 
 ---
